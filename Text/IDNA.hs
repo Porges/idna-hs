@@ -80,10 +80,5 @@ mergeEither :: Either a a -> a
 mergeEither (Left x) = x
 mergeEither (Right y) = y
 
-instance Monad (Either a) where
-	return = Right
-	Left x >>= _ = Left x
-	Right y >>= f = f y
-
 tests :: [Text]
 tests = ["Bücher","tūdaliņ"]
