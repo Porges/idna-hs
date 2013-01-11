@@ -6,12 +6,10 @@ where
 import Text.StringPrep
 import Text.NamePrep
 import Control.Monad
-import Data.Encoding.BootString
-import Data.Encoding.ByteSink
-import Data.Encoding
 import qualified Data.Text as Text
 import Data.Text (Text)
-import qualified Data.Text.Encoding as E
+import qualified Data.Text.Punycode as Puny
+import Data.Text.Encoding as E
 
 -- | The ASCII Compatible Encoding prefix (currently \'@xn--@\').
 acePrefix :: Text
@@ -34,9 +32,9 @@ toASCII allowUnassigned useSTD3ASCIIRules t = do
 		step7 <- if (Text.any (>'\x7f') step2)
 				then if acePrefix `Text.isPrefixOf` step3
 					then Nothing
-					else case encodeStrictByteStringExplicit punycode $ Text.unpack step3 of
+					else case return (Puny.encode step3) of -- TODO: this can fail?
 						Left _ -> Nothing
-						Right t -> return $ acePrefix `Text.append` E.decodeASCII t
+						Right t -> return $ acePrefix `Text.append` E.decodeUtf8 t
 				else return step3
 		
 		if Text.length step7 <= 63
@@ -66,9 +64,9 @@ toUnicode allowUnassigned useSTD3ASCIIRules t = mergeEither $ do
 		else return step2
 	
 	let step4 = Text.drop (Text.length acePrefix) step3
-	step5 <- case decodeStrictByteStringExplicit punycode $ E.encodeUtf8 step4 of
+	step5 <- case Puny.decode $ E.encodeUtf8 step4 of
 		Left _ -> Left step3
-		Right s -> return (Text.pack s)
+		Right s -> return s
 
 	case toASCII allowUnassigned useSTD3ASCIIRules step5 of
 		Nothing -> return step3
