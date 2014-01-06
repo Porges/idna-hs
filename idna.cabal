@@ -1,5 +1,5 @@
 Name: idna
-Version: 0.3
+Version: 0.3.0
 Description: Implements IDNA - Internationalized Domain Names in Applications (RFC 3490).
 Synopsis: Implements IDNA (RFC 3490).
 License: BSD3
@@ -17,4 +17,9 @@ Library
 
 source-repository head
     type: git
-    location: https://github.com/Porges/idna-hs
+    location: https://github.com/Porges/idna-hs.git
+
+source-repository this
+    type: git
+    location: https://github.com/Porges/idna-hs.git
+    tag: v0.3.0
