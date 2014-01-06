@@ -1,5 +1,5 @@
 Name: idna
-Version: 0.2
+Version: 0.3
 Description: Implements IDNA - Internationalized Domain Names in Applications (RFC 3490).
 Synopsis: Implements IDNA (RFC 3490).
 License: BSD3
@@ -11,7 +11,7 @@ License-file: LICENSE
 Category: Data, Text, RFC
 
 Library
- Build-Depends: base >= 4.3 && < 5, stringprep>=0.1.2, text>=0.1, punycode>=2.0
+ Build-Depends: base >= 4.3 && < 5, stringprep >=1 && < 2, text>=0.1, punycode>=2.0
  Exposed-modules: Text.IDNA
  ghc-options: -O2 -Wall
 

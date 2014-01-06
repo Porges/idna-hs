@@ -4,7 +4,7 @@ module Text.IDNA (acePrefix, toASCII, toUnicode)
 where
 
 import Text.StringPrep
-import Text.NamePrep
+import Text.StringPrep.Profiles
 import Control.Monad
 import qualified Data.Text as Text
 import Data.Text (Text)
