@@ -1,0 +1,8 @@
+flags: {}
+extra-package-dbs: []
+packages:
+- '.'
+extra-deps:
+- punycode-2.0
+- stringprep-1.0.0
+resolver: lts-7.24
