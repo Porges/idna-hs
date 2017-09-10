@@ -20,11 +20,15 @@ toASCII :: Bool -- ^ Whether to allow unassigned code points (in RFC: AllowUnass
         -> Text -- ^ The text to transform.
         -> Maybe Text
 toASCII allowUnassigned useSTD3ASCIIRules t = do
+                let profile = (namePrepProfile allowUnassigned) { maps = [] }
                 step2 <- if Text.any (>'\x7f') t
-                        then runStringPrep (namePrepProfile allowUnassigned) t
+                        then runStringPrep profile t
                         else return t
 
-                step3 <- if (useSTD3ASCIIRules && (Text.any isLDHascii step2 || Text.head step2 == '-' || Text.last step2 == '-'))
+                step3 <- if (useSTD3ASCIIRules &&
+                             (Text.any nonLDHascii step2 ||
+                              Text.head step2 == '-' ||
+                              Text.last step2 == '-'))
                         then Nothing
                         else return step2
 
@@ -40,8 +44,8 @@ toASCII allowUnassigned useSTD3ASCIIRules t = do
                         then return step7
                         else Nothing
 
-isLDHascii :: Char -> Bool
-isLDHascii c =
+nonLDHascii :: Char -> Bool
+nonLDHascii c =
         '\x0' <= c && c <= '\x2c' ||
         '\x2e' <= c && c <= '\x2f' ||
         '\x3a' <= c && c <= '\x40' ||
@@ -77,6 +81,3 @@ toUnicode allowUnassigned useSTD3ASCIIRules t = mergeEither $ do
 mergeEither :: Either a a -> a
 mergeEither (Left x) = x
 mergeEither (Right y) = y
-
--- tests :: [Text]
--- tests = ["Bücher","tūdaliņ"]
