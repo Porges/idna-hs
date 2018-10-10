@@ -21,9 +21,13 @@ toASCII :: Bool -- ^ Whether to allow unassigned code points (in RFC: AllowUnass
         -> Maybe Text
 toASCII allowUnassigned useSTD3ASCIIRules t = do
                 let profile = (namePrepProfile allowUnassigned) { maps = [] }
-                step2 <- if Text.any (>'\x7f') t
-                        then runStringPrep profile t
+                step1 <- if Text.null t
+                        then Nothing
                         else return t
+
+                step2 <- if Text.any (>'\x7f') step1
+                        then runStringPrep profile step1
+                        else return step1
 
                 step3 <- if (useSTD3ASCIIRules &&
                              (Text.any nonLDHascii step2 ||
